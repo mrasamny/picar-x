@@ -32,7 +32,7 @@ def calibrate_camera_tilt(px):
     px.tilt_camera(cal_angle)
     print("The camera tilt angle has been set to 0 degrees")
     print("Use the up and down arrow to adjust the camera tilt.")
-    print("Press the ESC key to end camera tilt calibration.")
+    print("Press the SHIFT key to end camera tilt calibration.")
     with keyboard.Events() as events:
         for event in events:
             if event.key == keyboard.Key.up:
@@ -41,9 +41,9 @@ def calibrate_camera_tilt(px):
             elif event.key == keyboard.Key.down:
                 cal_angle -= 1
                 px.tilt_camera(cal_angle)
-            elif event.key == keyboard.Key.esc:
+            elif event.key == keyboard.Key.shift:
                 break
-    px.camera_servo1_angle_calibration(cal_angle)
+    px.camera_servo1_angle_calibration(-cal_angle)
     
 def calibrate_camera_pan(px):
     cal_angle = 0
@@ -51,7 +51,7 @@ def calibrate_camera_pan(px):
     px.pan_camera(cal_angle)
     print("The camera tilt angle has been set to 0 degrees")
     print("Use the left and right arrow to adjust the camera pan.")
-    print("Press the ESC key to end camera pan calibration.")
+    print("Press the SHIFT key to end camera pan calibration.")
     with keyboard.Events() as events:
         for event in events:
             if event.key == keyboard.Key.right:
@@ -60,9 +60,9 @@ def calibrate_camera_pan(px):
             elif event.key == keyboard.Key.left:
                 cal_angle -= 1
                 px.pan_camera(cal_angle)
-            elif event.key == keyboard.Key.esc:
+            elif event.key == keyboard.Key.shift:
                 break;
-    px.camera_servo1_angle_calibration(cal_angle)
+    px.camera_servo1_angle_calibration(-cal_angle)
 
 def calibrate_turn_servo(px):
     cal_angle = 0
@@ -70,7 +70,7 @@ def calibrate_turn_servo(px):
     px.turn_wheels(cal_angle)
     print("The front wheels angle has been set to 0 degrees")
     print("Use the left and right arrow to adjust the front wheels.")
-    print("Press the ESC key to end.")
+    print("Press the SHIFT key to end.")
     is_done = False
     while not is_done:
         with keyboard.Events() as events:
@@ -81,15 +81,15 @@ def calibrate_turn_servo(px):
                 elif event.key == keyboard.Key.left:
                     cal_angle -= 1
                     px.turn_wheels(cal_angle)
-                elif event.key == keyboard.Key.esc:
+                elif event.key == keyboard.Key.shift:
                     break
-        px.dir_servo_angle_calibration(cal_angle)
         px.forward(50)
         delay(2000)
         px.stop()
         ans = input("Did the car travel in a straight line? ")
         if ans.lower() in ['y','yes']:
             is_done = True
+            px.dir_servo_angle_calibration(cal_angle)
         
     
 def calibrate():
@@ -100,5 +100,3 @@ def calibrate():
     calibrate_camera_tilt(px)
     calibrate_camera_pan(px)
     calibrate_turn_servo(px)
-    
-    
