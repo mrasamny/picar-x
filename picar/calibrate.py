@@ -70,7 +70,7 @@ def calibrate_turn_servo(px):
     px.turn_wheels(cal_angle)
     print("The front wheels angle has been set to 0 degrees")
     print("Use the left and right arrow to adjust the front wheels.")
-    print("Press the SHIFT key to end.")
+    print("Press the SHIFT key to test drive path and ENTER key to end.")
     is_done = False
     while not is_done:
         with keyboard.Events() as events:
@@ -82,14 +82,18 @@ def calibrate_turn_servo(px):
                     cal_angle -= 1
                     px.turn_wheels(cal_angle)
                 elif event.key == keyboard.Key.shift:
+                    px.forward(50)
+                    delay(2000)
+                    px.stop()
+                    print()
+                    print('If car traveled in a straight line, press Enter.')
+                    print('Otherwise, use left and right arrow keys to adjust')
+                    print('and press SHIFT key to test.')
                     break
-        px.forward(50)
-        delay(2000)
-        px.stop()
-        ans = input("Did the car travel in a straight line? ")
-        if ans.lower() in ['y','yes']:
-            is_done = True
-            px.dir_servo_angle_calibration(cal_angle)
+                elif event.key == keyboard.Key.enter:
+                    px.dir_servo_angle_calibration(cal_angle)
+                    is_done = True
+                    break
         
     
 def calibrate():
